@@ -42,13 +42,14 @@ var app = {
     $.ajax({
       url: app.server,
       type: 'POST',
-      data: message,
+      data: JSON.stringify(message),
       success: function (data) {
         // Clear messages input
         app.$message.val('');
 
         // Trigger a fetch to update the messages, pass true to animate
         app.fetch();
+        console.log("SEND successful!" + data)
       },
       error: function (error) {
         console.error('chatterbox: Failed to send message', error);
@@ -58,9 +59,10 @@ var app = {
 
   fetch: function(animate) {
     $.ajax({
+
       url: app.server,
       type: 'GET',
-      data: { order: '-createdAt' },
+      // data: { order: '-createdAt' },
       contentType: 'application/json',
       success: function(data) {
         // Don't bother if we have nothing to work with
@@ -70,7 +72,7 @@ var app = {
         app.messages = data.results;
 
         // Get the last message
-        var mostRecentMessage = data.results[data.results.length - 1];
+        var mostRecentMessage = JSON.parse(data.results[data.results.length - 1]);
 
         // Only bother updating the DOM if we have a new message
         if (mostRecentMessage.objectId !== app.lastMessageId) {
@@ -83,6 +85,7 @@ var app = {
           // Store the ID of the most recent message
           app.lastMessageId = mostRecentMessage.objectId;
         }
+        console.log("FETCH successful!!" , data)
       },
       error: function(error) {
         console.error('chatterbox: Failed to fetch messages', error);

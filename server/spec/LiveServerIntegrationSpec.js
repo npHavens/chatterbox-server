@@ -59,6 +59,7 @@ describe('server', function() {
       // Now if we request the log, that message we posted should be there:
       request('http://127.0.0.1:3000/classes/messages', function(error, response, body) {
         var messages = JSON.parse(body).results;
+        console.log(messages)
         expect(messages[0].username).to.equal('Jono');
         expect(messages[0].message).to.equal('Do my bidding!');
         done();
@@ -75,3 +76,18 @@ describe('server', function() {
 
 
 });
+
+  it('should handle OPTIONS requests', function(done) {
+      var requestParams = {method: 'OPTIONS',
+        uri: 'http://127.0.0.1:3000/classes/messages'
+      };
+
+    request(requestParams, function(error, response, body) {
+      // Now if we request the log, that message we posted should be there:
+      request('http://127.0.0.1:3000/classes/messages', function(error, response, body) {
+        expect(response.statusCode).to.equal(200);
+        done();
+      });
+    });
+  });
+
